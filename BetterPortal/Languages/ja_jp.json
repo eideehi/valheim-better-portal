@@ -1,0 +1,9 @@
+﻿{
+  "language": "japanese",
+  "translations": {
+    "@shift_key": "Shift",
+    "@empty_tag": "空のタグ",
+    "@piece_portal_setdesttag": "行き先のタグを設定",
+    "@piece_portal_dest": "行き先"
+  }
+}

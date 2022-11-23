@@ -1,0 +1,9 @@
+﻿{
+  "language": "english",
+  "translations": {
+    "@shift_key": "Shift",
+    "@empty_tag": "Empty Tag",
+    "@piece_portal_setdesttag": "Set destination tag",
+    "@piece_portal_dest": "Destination"
+  }
+}

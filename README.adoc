@@ -1,0 +1,39 @@
+= Better Portal - Valheim Mod
+:image-uri-features: https://app.box.com/shared/static/8anhpoogiwa4tek8rznl2m1ag5mt6wso.jpg
+:image-uri-bug-report: https://app.box.com/shared/static/g2v3vbju4jazq7kycoigp60ltki2kw8i.png
+:image-uri-discord: https://app.box.com/shared/static/0s09ti60hvyyp5k98xyrnkfp683mrt9r.png
+:uri-litjson: https://litjson.net
+:uri-license: link:LICENSE
+:uri-issues: https://github.com/eideehi/valheim-better-portal/issues
+:uri-discord: https://discord.gg/DDQqxkK7s6
+
+Better Portal is a mod that allows you to change the destination of portals to any tag. I know that there are already mods with the same functionality, but I created this mod because I did not want to install Jotunn. If you already have Jotunn installed, there is no advantage to using this mod. This mod has only minimal functionality.
+
+== Features
+When interacting with the portal, you can set the destination tag by pressing the Shift key at the same time. Portals do not have to be connected to each other and can teleport one way.
+
+NOTE: If multiple portals with the specified destination tag exist, they will be randomly connected.
+
+image::{image-uri-features}[alt="Features - Image"]
+
+== Languages
+[%header]
+|===
+|Language |Translators       |Status
+|English  |Translation Tools |100%
+|Japanese |EideeHi           |100%
+|===
+
+== Contacts
+image::{image-uri-bug-report}[link={uri-issues},alt="Bug report on Issues"]
+*Only bug reports are accepted under Issues.*
+
+image::{image-uri-discord}[link={uri-discord},alt="eidee.net - Discord Server"]
+*Questions, suggestions and comments are welcome on the Discord Server.*
+
+== Credits
+* Dependencies:
+** {uri-litjson}[LitJSON]
+
+== License
+Better Portal is developed and released under the MIT license. For the full text of the license, please see the {uri-license}[LICENSE] file.
