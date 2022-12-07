@@ -26,14 +26,16 @@ namespace BetterPortal
         }
 
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> MoveNext_Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> MoveNext_Transpiler(
+            IEnumerable<CodeInstruction> instructions)
         {
             return new CodeMatcher(instructions)
                 .MatchStartForward(
                     new CodeMatch(OpCodes.Ldstr, "tag"),
                     new CodeMatch(OpCodes.Ldstr, ""),
                     new CodeMatch(OpCodes.Callvirt,
-                        AccessTools.Method(typeof(ZDO), "GetString", new[] { typeof(string), typeof(string) })),
+                        AccessTools.Method(typeof(ZDO), "GetString",
+                            new[] { typeof(string), typeof(string) })),
                     new CodeMatch(OpCodes.Stloc_S))
                 .Repeat(matcher =>
                     matcher.SetInstruction(
@@ -47,10 +49,14 @@ namespace BetterPortal
     internal static class GamePatch
     {
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        [HarmonyPrefix, HarmonyPatch("FindRandomUnconnectedPortal")]
-        private static bool FindRandomUnconnectedPortal_Prefix(ref ZDO __result, List<ZDO> portals, ZDO skip, string tag)
+        [HarmonyPrefix]
+        [HarmonyPatch("FindRandomUnconnectedPortal")]
+        private static bool FindRandomUnconnectedPortal_Prefix(ref ZDO __result, List<ZDO> portals,
+            ZDO skip, string tag)
         {
-            var list = portals.Where(portal => portal != skip && portal.GetString("tag") == tag).ToList();
+            var list = portals
+                .Where(portal => portal != skip && portal.GetString("tag") == tag)
+                .ToList();
             __result = list.Count == 0 ? null : list[UnityEngine.Random.Range(0, list.Count)];
             return false;
         }
@@ -60,53 +66,52 @@ namespace BetterPortal
     [HarmonyPatch(typeof(TeleportWorld))]
     internal static class TeleportWorldPatch
     {
-        [HarmonyReversePatch, HarmonyPatch("HaveTarget")]
+        [HarmonyReversePatch]
+        [HarmonyPatch("HaveTarget")]
         private static bool HaveTarget(object instance)
         {
             throw new NotImplementedException("It's a stub");
         }
 
-        [HarmonyPostfix, HarmonyPatch("Awake")]
+        [HarmonyPostfix]
+        [HarmonyPatch("Awake")]
         private static void Awake_Postfix(TeleportWorld __instance, ZNetView ___m_nview)
         {
             if (___m_nview.GetZDO() != null)
-            {
                 __instance.gameObject.AddComponent<TeleportExtraData>();
-            }
         }
 
-        [HarmonyPrefix, HarmonyPatch(nameof(TeleportWorld.GetHoverText))]
-        private static bool GetHoverText_Prefix(TeleportWorld __instance, ZNetView ___m_nview, ref string __result)
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(TeleportWorld.GetHoverText))]
+        private static bool GetHoverText_Prefix(TeleportWorld __instance, ZNetView ___m_nview,
+            ref string __result)
         {
-            if (___m_nview.GetZDO() == null)
-            {
-                return true;
-            }
+            if (___m_nview.GetZDO() == null) return true;
 
             var tag = __instance.GetText();
             if (string.IsNullOrEmpty(tag))
-            {
                 tag = BetterPortal.L10N.Translate("@empty_tag");
-            }
 
             var dest = ___m_nview.GetZDO().GetString("desttag");
             if (string.IsNullOrEmpty(dest))
-            {
                 dest = BetterPortal.L10N.Translate("@empty_tag");
-            }
 
-            var status = (HaveTarget(__instance) ? "$piece_portal_connected" : "$piece_portal_unconnected");
-            var info = "$piece_portal_tag:\"" + tag + "\"  @piece_portal_dest:\"" + dest + "\" [" + status + "]";
-            var desc = "[<color=yellow><b>$KEY_Use</b></color>] $piece_portal_settag\n" +
-                       "[<color=yellow><b>@shift_key + $KEY_Use</b></color>] @piece_portal_setdesttag";
+            var status = HaveTarget(__instance)
+                ? "$piece_portal_connected"
+                : "$piece_portal_unconnected";
+            var info = $"$piece_portal_tag:\"{tag}\"  @piece_portal_dest:\"{dest}\"  [{status}]";
+            var controls = "[<color=yellow><b>$KEY_Use</b></color>] $piece_portal_settag\n" +
+                           "[<color=yellow><b>@shift_key + $KEY_Use</b></color>] @piece_portal_setdesttag";
 
-            __result = BetterPortal.L10N.Localize(info + "\n" + desc);
+            __result = BetterPortal.L10N.Localize(info + "\n" + controls);
             return false;
         }
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        [HarmonyPrefix, HarmonyPatch(nameof(TeleportWorld.Interact))]
-        private static bool Interact_Prefix(TeleportWorld __instance, ZNetView ___m_nview, ref bool __result, Humanoid human,
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(TeleportWorld.Interact))]
+        private static bool Interact_Prefix(TeleportWorld __instance, ZNetView ___m_nview,
+            ref bool __result, Humanoid human,
             bool hold, bool alt)
         {
             if (hold)
@@ -123,14 +128,10 @@ namespace BetterPortal
             }
 
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-            {
                 TextInput.instance.RequestText(__instance.GetComponent<TeleportExtraData>(),
                     BetterPortal.L10N.Translate("@piece_portal_dest"), 10);
-            }
             else
-            {
                 TextInput.instance.RequestText(__instance, "$piece_portal_tag", 10);
-            }
 
             __result = true;
             return false;
@@ -161,17 +162,13 @@ namespace BetterPortal
         public void SetText(string text)
         {
             if (_zNetView.IsValid())
-            {
                 _zNetView.InvokeRPC("SetTagDest", text);
-            }
         }
 
         private void RPC_SetTagDest(long sender, string tagDest)
         {
             if (_zNetView.IsValid() && _zNetView.IsOwner() && GetText() != tagDest)
-            {
                 _zNetView.GetZDO().Set("desttag", tagDest);
-            }
         }
     }
 }
