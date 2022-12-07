@@ -14,6 +14,7 @@ namespace BetterPortal
     [HarmonyPatch(typeof(Game))]
     internal static class GameInnerClassPatch
     {
+        [HarmonyTargetMethod]
         private static MethodBase TargetMethod()
         {
             var type = AccessTools.FirstInner(typeof(Game), _type =>
@@ -25,39 +26,19 @@ namespace BetterPortal
         }
 
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> MoveNext(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> MoveNext_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            var GetString =
-                AccessTools.Method(typeof(ZDO), "GetString", new[] { typeof(string), typeof(string) });
-
-            var codes = new List<CodeInstruction>(instructions);
-            var i = 0;
-            do
-            {
-                if (codes[i].opcode != OpCodes.Ldstr || !(codes[i].operand is string str) || str != "tag")
-                {
-                    continue;
-                }
-
-                var j = i;
-                while (++j < codes.Count)
-                {
-                    if (!codes[j].Calls(GetString))
-                    {
-                        continue;
-                    }
-
-                    if (codes[j + 1].opcode == OpCodes.Stloc_S)
-                    {
-                        codes.RemoveAt(i);
-                        codes.Insert(i, new CodeInstruction(OpCodes.Ldstr, "desttag"));
-                    }
-
-                    break;
-                }
-            } while (++i < codes.Count);
-
-            return codes.AsEnumerable();
+            return new CodeMatcher(instructions)
+                .MatchStartForward(
+                    new CodeMatch(OpCodes.Ldstr, "tag"),
+                    new CodeMatch(OpCodes.Ldstr, ""),
+                    new CodeMatch(OpCodes.Callvirt,
+                        AccessTools.Method(typeof(ZDO), "GetString", new[] { typeof(string), typeof(string) })),
+                    new CodeMatch(OpCodes.Stloc_S))
+                .Repeat(matcher =>
+                    matcher.SetInstruction(
+                        new CodeInstruction(OpCodes.Ldstr, "desttag")))
+                .InstructionEnumeration();
         }
     }
 
@@ -67,9 +48,9 @@ namespace BetterPortal
     {
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         [HarmonyPrefix, HarmonyPatch("FindRandomUnconnectedPortal")]
-        private static bool FindRandomUnconnectedPortal(ref ZDO __result, List<ZDO> portals, ZDO skip, string tag)
+        private static bool FindRandomUnconnectedPortal_Prefix(ref ZDO __result, List<ZDO> portals, ZDO skip, string tag)
         {
-            var list = portals.Where(portal => portal != skip && portal.GetString(nameof(tag)) == tag).ToList();
+            var list = portals.Where(portal => portal != skip && portal.GetString("tag") == tag).ToList();
             __result = list.Count == 0 ? null : list[UnityEngine.Random.Range(0, list.Count)];
             return false;
         }
@@ -86,7 +67,7 @@ namespace BetterPortal
         }
 
         [HarmonyPostfix, HarmonyPatch("Awake")]
-        private static void Awake(TeleportWorld __instance, ZNetView ___m_nview)
+        private static void Awake_Postfix(TeleportWorld __instance, ZNetView ___m_nview)
         {
             if (___m_nview.GetZDO() != null)
             {
@@ -95,7 +76,7 @@ namespace BetterPortal
         }
 
         [HarmonyPrefix, HarmonyPatch(nameof(TeleportWorld.GetHoverText))]
-        private static bool GetHoverText(TeleportWorld __instance, ZNetView ___m_nview, ref string __result)
+        private static bool GetHoverText_Prefix(TeleportWorld __instance, ZNetView ___m_nview, ref string __result)
         {
             if (___m_nview.GetZDO() == null)
             {
@@ -125,7 +106,7 @@ namespace BetterPortal
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         [HarmonyPrefix, HarmonyPatch(nameof(TeleportWorld.Interact))]
-        private static bool Interact(TeleportWorld __instance, ZNetView ___m_nview, ref bool __result, Humanoid human,
+        private static bool Interact_Prefix(TeleportWorld __instance, ZNetView ___m_nview, ref bool __result, Humanoid human,
             bool hold, bool alt)
         {
             if (hold)
