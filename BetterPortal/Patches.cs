@@ -148,6 +148,11 @@ namespace BetterPortal
             _zNetView.Register<string>("SetTagDest", RPC_SetTagDest);
         }
 
+        private void OnDestroy()
+        {
+            _zNetView = null;
+        }
+
         public string GetText()
         {
             return _zNetView.GetZDO().GetString("desttag");
