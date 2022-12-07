@@ -189,13 +189,17 @@
             <HintPath>$(ManagedDataDirectory)\assembly_utils.dll</HintPath>
         </Reference>
     </ItemGroup>
+    <ItemGroup>
+        <Compile Include="**\*.cs" Exclude="bin\**\*;obj\**\*;Libraries\**\*" />
+    </ItemGroup>
     <ItemGroup Label="Libraries">
         <Reference Include="LitJSON, Version=0.18.0.0, Culture=neutral, processorArchitecture=MSIL">
             <HintPath>..\packages\LitJson.0.18.0\lib\net45\LitJSON.dll</HintPath>
         </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="**\*.cs" Exclude="bin\**\*;obj\**\*" />
+        <Compile Include="Libraries\mod-utils\ModUtils\Json.cs" />
+        <Compile Include="Libraries\mod-utils\ModUtils\Localization.cs" />
+        <Compile Include="Libraries\mod-utils\ModUtils\Logger.cs" />
+        <Compile Include="Libraries\mod-utils\ModUtils\Reflections.cs" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="Languages\**\*">

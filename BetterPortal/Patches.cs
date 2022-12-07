@@ -18,7 +18,7 @@ namespace BetterPortal
         {
             var type = AccessTools.FirstInner(typeof(Game), _type =>
             {
-                BetterPortal.ModLogger.LogDebug(_type.Name);
+                BetterPortal.Logger.Debug(_type.Name);
                 return _type.Name.Contains("ConnectPortals");
             });
             return AccessTools.FirstMethod(type, method => method.Name.Contains("MoveNext"));
@@ -105,13 +105,13 @@ namespace BetterPortal
             var tag = __instance.GetText();
             if (string.IsNullOrEmpty(tag))
             {
-                tag = L10N.Translate("@empty_tag");
+                tag = BetterPortal.L10N.Translate("@empty_tag");
             }
 
             var dest = ___m_nview.GetZDO().GetString("desttag");
             if (string.IsNullOrEmpty(dest))
             {
-                dest = L10N.Translate("@empty_tag");
+                dest = BetterPortal.L10N.Translate("@empty_tag");
             }
 
             var status = (HaveTarget(__instance) ? "$piece_portal_connected" : "$piece_portal_unconnected");
@@ -119,7 +119,7 @@ namespace BetterPortal
             var desc = "[<color=yellow><b>$KEY_Use</b></color>] $piece_portal_settag\n" +
                        "[<color=yellow><b>@shift_key + $KEY_Use</b></color>] @piece_portal_setdesttag";
 
-            __result = L10N.Localize(info + "\n" + desc);
+            __result = BetterPortal.L10N.Localize(info + "\n" + desc);
             return false;
         }
 
@@ -144,7 +144,7 @@ namespace BetterPortal
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
                 TextInput.instance.RequestText(__instance.GetComponent<TeleportExtraData>(),
-                    L10N.Translate("@piece_portal_dest"), 10);
+                    BetterPortal.L10N.Translate("@piece_portal_dest"), 10);
             }
             else
             {

@@ -1,0 +1,3 @@
+[submodule "BetterPortal/Libraries/mod-utils"]
+	path = BetterPortal/Libraries/mod-utils
+	url = https://github.com/eideehi/valheim-mod-utils.git
