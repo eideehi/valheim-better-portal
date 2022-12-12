@@ -41,6 +41,17 @@ namespace BetterPortal
                 .Repeat(matcher =>
                     matcher.SetInstruction(
                         new CodeInstruction(OpCodes.Ldstr, "desttag")))
+                .End()
+                .MatchStartBackwards(
+                    new CodeMatch(OpCodes.Ldloc_S),
+                    new CodeMatch(OpCodes.Ldstr, "target"),
+                    new CodeMatch(OpCodes.Ldloc_S),
+                    new CodeMatch(OpCodes.Ldfld,
+                        AccessTools.Field(typeof(ZDO), "m_uid")),
+                    new CodeMatch(OpCodes.Callvirt,
+                        AccessTools.Method(typeof(ZDO), "Set",
+                            new[] { typeof(string), typeof(ZDOID) })))
+                .RemoveInstructions(5)
                 .InstructionEnumeration();
         }
     }
