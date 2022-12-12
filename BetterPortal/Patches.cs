@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -13,16 +11,13 @@ namespace BetterPortal
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     [HarmonyPatch(typeof(Game))]
-    internal static class GameInnerClassPatch
+    internal static class GameCoroutinePatch
     {
         [HarmonyTargetMethod]
         private static MethodBase TargetMethod()
         {
-            var type = AccessTools.FirstInner(typeof(Game), _type =>
-            {
-                BetterPortal.Logger.Debug(_type.Name);
-                return _type.Name.Contains("ConnectPortals");
-            });
+            var type = AccessTools.FirstInner(typeof(Game),
+                _type => _type.Name.Contains("ConnectPortals"));
             return AccessTools.FirstMethod(type, method => method.Name.Contains("MoveNext"));
         }
 
@@ -56,47 +51,36 @@ namespace BetterPortal
         }
     }
 
+    [SuppressMessage("ReSharper", "IdentifierTypo")]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    [HarmonyPatch(typeof(Game))]
-    internal static class GamePatch
+    [HarmonyPatch]
+    internal static class Patches
     {
-        [SuppressMessage("ReSharper", "RedundantAssignment")]
         [HarmonyPrefix]
-        [HarmonyPatch("FindRandomUnconnectedPortal")]
-        private static bool FindRandomUnconnectedPortal_Prefix(ref ZDO __result, List<ZDO> portals,
-            ZDO skip, string tag)
+        [HarmonyPatch(typeof(Game), "FindRandomUnconnectedPortal")]
+        private static bool Game_FindRandomUnconnectedPortal_Prefix(ref ZDO __result,
+            List<ZDO> portals, ZDO skip, string tag)
         {
             var list = portals
                 .Where(portal => portal != skip && portal.GetString("tag") == tag)
                 .ToList();
-            __result = list.Count == 0 ? null : list[UnityEngine.Random.Range(0, list.Count)];
+            __result = list.Count == 0 ? null : list[Random.Range(0, list.Count)];
             return false;
-        }
-    }
-
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    [HarmonyPatch(typeof(TeleportWorld))]
-    internal static class TeleportWorldPatch
-    {
-        [HarmonyReversePatch]
-        [HarmonyPatch("HaveTarget")]
-        private static bool HaveTarget(object instance)
-        {
-            throw new NotImplementedException("It's a stub");
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch("Awake")]
-        private static void Awake_Postfix(TeleportWorld __instance, ZNetView ___m_nview)
+        [HarmonyPatch(typeof(TeleportWorld), "Awake")]
+        private static void TeleportWorld_Awake_Postfix(TeleportWorld __instance,
+            ZNetView ___m_nview)
         {
             if (___m_nview.GetZDO() != null)
-                __instance.gameObject.AddComponent<TeleportExtraData>();
+                __instance.gameObject.AddComponent<TeleportWorldExtension>();
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch(nameof(TeleportWorld.GetHoverText))]
-        private static bool GetHoverText_Prefix(TeleportWorld __instance, ZNetView ___m_nview,
-            ref string __result)
+        [HarmonyPatch(typeof(TeleportWorld), nameof(TeleportWorld.GetHoverText))]
+        private static bool TeleportWorld_GetHoverText_Prefix(TeleportWorld __instance,
+            ZNetView ___m_nview, ref string __result)
         {
             if (___m_nview.GetZDO() == null) return true;
 
@@ -108,7 +92,7 @@ namespace BetterPortal
             if (string.IsNullOrEmpty(dest))
                 dest = BetterPortal.L10N.Translate("@empty_tag");
 
-            var status = HaveTarget(__instance)
+            var status = ___m_nview.GetZDO().GetZDOID("target") != ZDOID.None
                 ? "$piece_portal_connected"
                 : "$piece_portal_unconnected";
             var info = $"$piece_portal_tag:\"{tag}\"  @piece_portal_dest:\"{dest}\"  [{status}]";
@@ -119,12 +103,10 @@ namespace BetterPortal
             return false;
         }
 
-        [SuppressMessage("ReSharper", "RedundantAssignment")]
         [HarmonyPrefix]
-        [HarmonyPatch(nameof(TeleportWorld.Interact))]
-        private static bool Interact_Prefix(TeleportWorld __instance, ZNetView ___m_nview,
-            ref bool __result, Humanoid human,
-            bool hold, bool alt)
+        [HarmonyPatch(typeof(TeleportWorld), nameof(TeleportWorld.Interact))]
+        private static bool TeleportWorld_Interact_Prefix(TeleportWorld __instance,
+            ZNetView ___m_nview, ref bool __result, Humanoid human, bool hold, bool alt)
         {
             if (hold)
             {
@@ -140,99 +122,13 @@ namespace BetterPortal
             }
 
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-                TextInput.instance.RequestText(__instance.GetComponent<TeleportExtraData>(),
+                TextInput.instance.RequestText(__instance.GetComponent<TeleportWorldExtension>(),
                     BetterPortal.L10N.Translate("@piece_portal_dest"), 10);
             else
                 TextInput.instance.RequestText(__instance, "$piece_portal_tag", 10);
 
             __result = true;
             return false;
-        }
-    }
-
-    [DisallowMultipleComponent]
-    internal class TeleportExtraData : MonoBehaviour, TextReceiver
-    {
-        private ZNetView _zNetView;
-
-        private void Awake()
-        {
-            _zNetView = GetComponent<ZNetView>();
-            _zNetView.Register<string>("SetTagDest", RPC_SetTagDest);
-        }
-
-        private void OnDestroy()
-        {
-            _zNetView = null;
-        }
-
-        private IEnumerator UpdateConnection()
-        {
-            var zdo = _zNetView.GetZDO();
-            var dest = zdo.GetString("desttag");
-
-            var targetId = zdo.GetZDOID("target");
-            if (!targetId.IsNone())
-            {
-                var target = ZDOMan.instance.GetZDO(targetId);
-                if (target == null || target.GetString("tag") != dest)
-                {
-                    zdo.SetOwner(ZDOMan.instance.GetMyID());
-                    zdo.Set("target", ZDOID.None);
-                    ZDOMan.instance.ForceSendZDO(zdo.m_uid);
-                }
-            }
-
-            if (!zdo.GetZDOID("target").IsNone())
-            {
-                StopCoroutine(nameof(UpdateConnection));
-                yield return null;
-            }
-
-            var portals = new List<ZDO>();
-            var index = 0;
-            bool done;
-            do
-            {
-                done = ZDOMan.instance.GetAllZDOsWithPrefabIterative(
-                    Game.instance.m_portalPrefab.name, portals, ref index);
-                yield return null;
-            } while (!done);
-
-            portals = portals
-                .Where(x => x != zdo && x.GetString("tag") == dest)
-                .ToList();
-            var portal = portals.Count == 0
-                ? null
-                : portals[UnityEngine.Random.Range(0, portals.Count)];
-            if (portal != null)
-            {
-                zdo.SetOwner(ZDOMan.instance.GetMyID());
-                zdo.Set("target", portal.m_uid);
-                ZDOMan.instance.ForceSendZDO(zdo.m_uid);
-            }
-
-            StopCoroutine(nameof(UpdateConnection));
-            yield return null;
-        }
-
-        public string GetText()
-        {
-            return _zNetView.GetZDO().GetString("desttag");
-        }
-
-        public void SetText(string text)
-        {
-            if (_zNetView.IsValid())
-                _zNetView.InvokeRPC("SetTagDest", text);
-        }
-
-        private void RPC_SetTagDest(long sender, string tagDest)
-        {
-            if (!_zNetView.IsValid() || !_zNetView.IsOwner() || GetText() == tagDest) return;
-
-            _zNetView.GetZDO().Set("desttag", tagDest);
-            StartCoroutine(nameof(UpdateConnection));
         }
     }
 }
