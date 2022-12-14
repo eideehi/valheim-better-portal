@@ -11,6 +11,8 @@ When interacting with the portal, you can set the destination tag by
 pressing the Shift key at the same time. Portals do not have to be
 connected to each other and can teleport one way.
 
+**TIP:** Pressing the Insert Key while entering the destination tag will execute autocomplete. Also, pressing the up or down arrow key will rotate existing tags.
+
 **NOTE:** If multiple portals with the specified destination tag exist, they will be randomly connected.
 
 ![Features -
