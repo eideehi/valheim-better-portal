@@ -47,6 +47,19 @@ namespace BetterPortal
                         AccessTools.Method(typeof(ZDO), "Set",
                             new[] { typeof(string), typeof(ZDOID) })))
                 .RemoveInstructions(5)
+                .Start()
+                .MatchStartForward(
+                    new CodeMatch(OpCodes.Ldloc_1),
+                    new CodeMatch(OpCodes.Ldfld,
+                        AccessTools.Field(typeof(Game), "m_tempPortalList")),
+                    new CodeMatch(OpCodes.Callvirt,
+                        AccessTools.Method(typeof(List<ZDO>), "GetEnumerator")))
+                .Insert(
+                    new CodeInstruction(OpCodes.Ldloc_1),
+                    new CodeInstruction(OpCodes.Ldfld,
+                        AccessTools.Field(typeof(Game), "m_tempPortalList")),
+                    new CodeInstruction(OpCodes.Call,
+                        AccessTools.Method(typeof(Portals), "Update")))
                 .InstructionEnumeration();
         }
     }
@@ -129,6 +142,19 @@ namespace BetterPortal
 
             __result = true;
             return false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(TextInput), "Update")]
+        private static void TextInput_Update_Postfix(TextInput __instance,
+            TextReceiver ___m_queuedSign, bool ___m_visibleFrame)
+        {
+            if (!___m_visibleFrame || Console.IsVisible() || Chat.instance.HasFocus()) return;
+            if (!__instance.m_textField.isFocused) return;
+            if (!TeleportWorldExtension.GetAllInstance()
+                    .Any(x => ReferenceEquals(x, ___m_queuedSign))) return;
+
+            TextInputExtension.Update(__instance);
         }
     }
 }

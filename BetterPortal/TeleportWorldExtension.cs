@@ -8,16 +8,32 @@ namespace BetterPortal
     [DisallowMultipleComponent]
     internal class TeleportWorldExtension : MonoBehaviour, TextReceiver
     {
+        private static readonly List<TeleportWorldExtension> AllInstance;
+
+        static TeleportWorldExtension()
+        {
+            AllInstance = new List<TeleportWorldExtension>();
+        }
+
         private ZNetView _zNetView;
+
+        public static IEnumerable<TeleportWorldExtension> GetAllInstance()
+        {
+            return AllInstance;
+        }
 
         private void Awake()
         {
             _zNetView = GetComponent<ZNetView>();
             _zNetView.Register<string>("SetTagDest", RPC_SetTagDest);
+
+            AllInstance.Add(this);
         }
 
         private void OnDestroy()
         {
+            AllInstance.Remove(this);
+
             _zNetView = null;
         }
 
