@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,8 +10,26 @@ namespace BetterPortal
         private static bool _keyPressed;
         private static bool _keyHold;
         private static KeyCode _pressedKey = KeyCode.None;
-        private static string _prevText;
-        private static string _searchKeyword;
+        private static string _originalWord;
+        private static string _previousResult;
+
+        private static List<string> GetPortalTags()
+        {
+            return Portals.GetAll()
+                .Select(x => x.GetString("tag"))
+                .OrderBy(x => x)
+                .Distinct()
+                .ToList();
+        }
+
+        private static void UpdateTextInput(TextInput input, string text)
+        {
+            var textField = input.m_textField;
+            if (text == textField.text) return;
+
+            textField.text = string.IsNullOrEmpty(text) ? "" : text;
+            textField.MoveTextEnd(false);
+        }
 
         private static void InputUpdate()
         {
@@ -46,82 +66,70 @@ namespace BetterPortal
 
             if (!_keyPressed || _keyHold) return;
 
+            var textField = input.m_textField;
+            if (textField is null) return;
+
             if (_pressedKey == KeyCode.Insert)
-                AutoComplete(input);
+                UpdateTextInput(input, AutoComplete(textField.text));
             else if (_pressedKey == KeyCode.UpArrow || _pressedKey == KeyCode.DownArrow)
-                SetNextTag(input, _pressedKey == KeyCode.DownArrow);
+                UpdateTextInput(input, Rotate(textField.text, _pressedKey == KeyCode.DownArrow));
         }
 
-        private static void AutoComplete(TextInput input)
+        private static string AutoComplete(string word)
         {
-            var textField = input.m_textField;
-            var text = textField.text.Trim();
+            var tags = GetPortalTags();
 
-            if (_prevText != text)
-                _searchKeyword = null;
-
-            if (_searchKeyword is null)
-                _searchKeyword = text;
-
-            var tags = Portals.GetAll()
-                .Select(x => x.GetString("tag"))
-                .Where(x => x.StartsWith(_searchKeyword))
-                .OrderBy(x => x)
-                .Distinct().ToList();
-
-            if (!tags.Any()) return;
-
-            var next = tags[Mathf.Clamp(tags.IndexOf(text) + 1, 0, tags.Count - 1)];
-            if (next == text)
-                next = tags.FirstOrDefault();
-
-            text = next;
-            _prevText = text;
-
-            if (text == textField.text) return;
-
-            textField.text = text;
-            textField.MoveTextEnd(false);
-        }
-
-        private static void SetNextTag(TextInput input, bool ascending)
-        {
-            var textField = input.m_textField;
-            var text = textField.text.Trim();
-
-            var tags = Portals.GetAll().Select(x => x.GetString("tag")).Distinct();
-            tags = (ascending
-                ? tags.OrderBy(x => x)
-                : tags.OrderByDescending(x => x)).ToList();
-
-            string next = null;
-            string nextCandidate = null;
-
-            var tagFound = false;
-            foreach (var tag in tags)
+            if (word == _previousResult)
             {
-                if (tagFound)
+                var index = tags.IndexOf(_previousResult);
+                for (var i = index + 1; i < tags.Count; i++)
                 {
-                    next = tag;
-                    break;
+                    if (!tags[i].StartsWith(_originalWord, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    _previousResult = tags[i];
+                    return _previousResult;
                 }
 
-                tagFound = tag == text;
-                if (!tagFound && nextCandidate is null && tag.StartsWith(text))
-                    nextCandidate = tag;
+                _previousResult = null;
+                return _originalWord;
             }
 
-            if (!(next is null))
-                text = next;
-            else if (!(nextCandidate is null))
-                text = nextCandidate;
-            else
-                text = tags.FirstOrDefault();
+            _originalWord = null;
+            _previousResult = null;
+            foreach (var tag in tags.Where(tag =>
+                         tag.StartsWith(word, StringComparison.OrdinalIgnoreCase)))
+            {
+                _originalWord = word;
+                _previousResult = tag;
+                return _previousResult;
+            }
 
-            if (text == textField.text) return;
+            return word;
+        }
 
-            textField.text = text;
-            textField.MoveTextEnd(false);
+        private static string Rotate(string current, bool ascending)
+        {
+            var tags = GetPortalTags();
+
+            if (string.IsNullOrEmpty(current))
+                return ascending
+                    ? tags.FirstOrDefault(x => !string.IsNullOrEmpty(x))
+                    : tags.LastOrDefault(x => !string.IsNullOrEmpty(x));
+
+            var index = tags.FindIndex(x => x.Equals(current, StringComparison.OrdinalIgnoreCase));
+            if (index == -1)
+                index = tags.FindIndex(x =>
+                    x.StartsWith(current, StringComparison.OrdinalIgnoreCase));
+
+            if (index == -1) return ascending ? tags.FirstOrDefault() : tags.LastOrDefault();
+
+            index += ascending ? 1 : -1;
+            if (index < 0)
+                return tags.LastOrDefault();
+            if (index >= tags.Count)
+                return tags.FirstOrDefault();
+            return tags[index];
         }
     }
 }
