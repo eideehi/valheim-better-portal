@@ -1,3 +1,6 @@
+#### v1.0.2 [2023-03-02]
+- Improve input autocomplete
+
 #### v1.0.1 [2022-12-14]
 - Change to update connections immediately when destination tag is changed
 - Add the function to complete tag names while entering destination tags
