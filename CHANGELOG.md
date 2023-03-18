@@ -1,3 +1,6 @@
+#### v1.0.3 [2023-03-18]
+- Updated for changes in Valheim 0.214.2.
+
 #### v1.0.2 [2023-03-02]
 - Improve input autocomplete
 
