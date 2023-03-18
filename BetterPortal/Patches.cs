@@ -150,7 +150,8 @@ namespace BetterPortal
             TextReceiver ___m_queuedSign, bool ___m_visibleFrame)
         {
             if (!___m_visibleFrame || Console.IsVisible() || Chat.instance.HasFocus()) return;
-            if (!__instance.m_textField.isFocused) return;
+            if ((!__instance.m_textField || !__instance.m_textField.isFocused) &&
+                (!__instance.m_textFieldTMP || !__instance.m_textFieldTMP.isFocused)) return;
             if (!TeleportWorldExtension.GetAllInstance()
                     .Any(x => ReferenceEquals(x, ___m_queuedSign))) return;
 

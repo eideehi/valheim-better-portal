@@ -24,11 +24,22 @@ namespace BetterPortal
 
         private static void UpdateTextInput(TextInput input, string text)
         {
-            var textField = input.m_textField;
-            if (text == textField.text) return;
+            if (input.m_textField)
+            {
+                var textField = input.m_textField;
+                if (text == textField.text) return;
 
-            textField.text = string.IsNullOrEmpty(text) ? "" : text;
-            textField.MoveTextEnd(false);
+                textField.text = string.IsNullOrEmpty(text) ? "" : text;
+                textField.MoveTextEnd(false);
+            }
+            else if (input.m_textFieldTMP)
+            {
+                var textField = input.m_textFieldTMP;
+                if (text == textField.text) return;
+
+                textField.text = string.IsNullOrEmpty(text) ? "" : text;
+                textField.MoveTextEnd(false);
+            }
         }
 
         private static void InputUpdate()
@@ -66,13 +77,12 @@ namespace BetterPortal
 
             if (!_keyPressed || _keyHold) return;
 
-            var textField = input.m_textField;
-            if (textField is null) return;
-
+            var text = (input.m_textField ? input.m_textField.text : input.m_textFieldTMP.text) ??
+                       "";
             if (_pressedKey == KeyCode.Insert)
-                UpdateTextInput(input, AutoComplete(textField.text));
+                UpdateTextInput(input, AutoComplete(text));
             else if (_pressedKey == KeyCode.UpArrow || _pressedKey == KeyCode.DownArrow)
-                UpdateTextInput(input, Rotate(textField.text, _pressedKey == KeyCode.DownArrow));
+                UpdateTextInput(input, Rotate(text, _pressedKey == KeyCode.DownArrow));
         }
 
         private static string AutoComplete(string word)

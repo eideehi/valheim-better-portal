@@ -11,7 +11,7 @@
         <AssemblyName>BetterPortal</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
-        <Version>1.0.2</Version>
+        <Version>1.0.3</Version>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,6 +55,10 @@
         </Reference>
     </ItemGroup>
     <ItemGroup Label="Unity">
+        <Reference Include="Unity.TextMeshPro">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>$(ManagedDataDirectory)\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>$(UnstrippedDllDirectory)\UnityEngine.dll</HintPath>
