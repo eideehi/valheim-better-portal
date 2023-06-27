@@ -15,8 +15,8 @@ namespace BetterPortal
 
         private static List<string> GetPortalTags()
         {
-            return Portals.GetAll()
-                .Select(x => x.GetString("tag"))
+            return ZDOMan.instance.GetPortals()
+                .Select(x => x.GetString(ZDOVars.s_tag))
                 .OrderBy(x => x)
                 .Distinct()
                 .ToList();

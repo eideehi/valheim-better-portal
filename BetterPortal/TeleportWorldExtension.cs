@@ -40,46 +40,36 @@ namespace BetterPortal
         private IEnumerator UpdateConnection()
         {
             var zdo = _zNetView.GetZDO();
-            var dest = zdo.GetString("desttag");
+            var dest = zdo.GetString(ZdoTags.DestTag);
 
-            var targetId = zdo.GetZDOID("target");
+            var targetId = zdo.GetConnectionZDOID(ZDOExtraData.ConnectionType.Portal);
             if (!targetId.IsNone())
             {
                 var target = ZDOMan.instance.GetZDO(targetId);
-                if (target == null || target.GetString("tag") != dest)
+                if (target == null || target.GetString(ZDOVars.s_tag) != dest)
                 {
-                    zdo.SetOwner(ZDOMan.instance.GetMyID());
-                    zdo.Set("target", ZDOID.None);
+                    zdo.SetOwner(ZDOMan.GetSessionID());
+                    zdo.UpdateConnection(ZDOExtraData.ConnectionType.Portal, ZDOID.None);
                     ZDOMan.instance.ForceSendZDO(zdo.m_uid);
                 }
             }
 
-            if (!zdo.GetZDOID("target").IsNone())
+            if (!zdo.GetConnectionZDOID(ZDOExtraData.ConnectionType.Portal).IsNone())
             {
                 StopCoroutine(nameof(UpdateConnection));
                 yield return null;
             }
 
-            var portals = new List<ZDO>();
-            var index = 0;
-            bool done;
-            do
-            {
-                done = ZDOMan.instance.GetAllZDOsWithPrefabIterative(
-                    Game.instance.m_portalPrefab.name, portals, ref index);
-                yield return null;
-            } while (!done);
-
-            portals = portals
-                .Where(x => x != zdo && x.GetString("tag") == dest)
+            var portals = ZDOMan.instance.GetPortals()
+                .Where(x => x != zdo && x.GetString(ZDOVars.s_tag) == dest)
                 .ToList();
             var portal = portals.Count == 0
                 ? null
                 : portals[Random.Range(0, portals.Count)];
             if (portal != null)
             {
-                zdo.SetOwner(ZDOMan.instance.GetMyID());
-                zdo.Set("target", portal.m_uid);
+                zdo.SetOwner(ZDOMan.GetSessionID());
+                zdo.UpdateConnection(ZDOExtraData.ConnectionType.Portal, portal.m_uid);
                 ZDOMan.instance.ForceSendZDO(zdo.m_uid);
             }
 
@@ -89,7 +79,7 @@ namespace BetterPortal
 
         public string GetText()
         {
-            return _zNetView.GetZDO().GetString("desttag");
+            return _zNetView.GetZDO().GetString(ZdoTags.DestTag);
         }
 
         public void SetText(string text)
@@ -102,7 +92,7 @@ namespace BetterPortal
         {
             if (!_zNetView.IsValid() || !_zNetView.IsOwner() || GetText() == tagDest) return;
 
-            _zNetView.GetZDO().Set("desttag", tagDest);
+            _zNetView.GetZDO().Set(ZdoTags.DestTag, tagDest);
             StartCoroutine(nameof(UpdateConnection));
         }
     }
