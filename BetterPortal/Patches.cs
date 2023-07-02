@@ -25,6 +25,13 @@ namespace BetterPortal
              * - string tag = skip.GetString(ZDOVars.s_tag);
              * + string tag = skip.GetString(ZdoTags.DestTag);
              *   ZDO unconnectedPortal = this.FindRandomUnconnectedPortal(portals, skip, tag);
+             * ...
+             *   skip.SetOwner(ZDOMan.GetSessionID());
+             * - unconnectedPortal.SetOwner(ZDOMan.GetSessionID());
+             *   skip.SetConnection(ZDOExtraData.ConnectionType.Portal, unconnectedPortal.m_uid);
+             * - unconnectedPortal.SetConnection(ZDOExtraData.ConnectionType.Portal, skip.m_uid);
+             *   ZDOMan.instance.ForceSendZDO(skip.m_uid);
+             * - ZDOMan.instance.ForceSendZDO(unconnectedPortal.m_uid);
              */
             var codeInstructions = new List<CodeInstruction>(instructions);
             codeInstructions.ForEach(x => BetterPortal.Logger.Message(x.ToString()));
@@ -40,6 +47,28 @@ namespace BetterPortal
                     matcher.SetInstruction(
                         new CodeInstruction(OpCodes.Ldsfld,
                             AccessTools.Field(typeof(ZdoTags), "DestTag"))))
+                .End()
+                .MatchStartBackwards(
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZDOMan), "get_instance")),
+                    new CodeMatch(OpCodes.Ldloc_S),
+                    new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ZDO), "m_uid")),
+                    new CodeMatch(OpCodes.Callvirt,
+                        AccessTools.Method(typeof(ZDOMan), "ForceSendZDO",
+                            new[] { typeof(ZDOID) })))
+                .RemoveInstructions(4)
+                .MatchStartBackwards(
+                    new CodeMatch(OpCodes.Ldloc_S),
+                    new CodeMatch(OpCodes.Ldc_I4_1),
+                    new CodeMatch(OpCodes.Ldloc_S),
+                    new CodeMatch(OpCodes.Ldfld, AccessTools.Field(typeof(ZDO), "m_uid")),
+                    new CodeMatch(OpCodes.Callvirt,
+                        AccessTools.Method(typeof(ZDO), "SetConnection")))
+                .RemoveInstructions(5)
+                .MatchStartBackwards(
+                    new CodeMatch(OpCodes.Ldloc_S),
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(ZDOMan), "GetSessionID")),
+                    new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ZDO), "SetOwner")))
+                .RemoveInstructions(3)
                 .Instructions();
             codeInstructions.ForEach(x => BetterPortal.Logger.Debug(x.ToString()));
             return codeInstructions;
