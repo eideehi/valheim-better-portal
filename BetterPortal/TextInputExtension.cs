@@ -24,17 +24,9 @@ namespace BetterPortal
 
         private static void UpdateTextInput(TextInput input, string text)
         {
-            if (input.m_textField)
+            if (input.m_inputField)
             {
-                var textField = input.m_textField;
-                if (text == textField.text) return;
-
-                textField.text = string.IsNullOrEmpty(text) ? "" : text;
-                textField.MoveTextEnd(false);
-            }
-            else if (input.m_textFieldTMP)
-            {
-                var textField = input.m_textFieldTMP;
+                var textField = input.m_inputField;
                 if (text == textField.text) return;
 
                 textField.text = string.IsNullOrEmpty(text) ? "" : text;
@@ -77,8 +69,7 @@ namespace BetterPortal
 
             if (!_keyPressed || _keyHold) return;
 
-            var text = (input.m_textField ? input.m_textField.text : input.m_textFieldTMP.text) ??
-                       "";
+            var text = (input.m_inputField ? input.m_inputField.text : "");
             if (_pressedKey == KeyCode.Insert)
                 UpdateTextInput(input, AutoComplete(text));
             else if (_pressedKey == KeyCode.UpArrow || _pressedKey == KeyCode.DownArrow)
