@@ -58,6 +58,10 @@ Image](https://app.box.com/shared/static/8anhpoogiwa4tek8rznl2m1ag5mt6wso.jpg)
 
     -   [LitJSON](https://litjson.net)
 
+-   Contributors
+
+    -   [Fusionette](https://github.com/Fusionette)
+
 ## License
 
 Better Portal is developed and released under the MIT license. For the

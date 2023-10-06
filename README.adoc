@@ -37,5 +37,8 @@ image::{image-uri-discord}[link={uri-discord},alt="eidee.net - Discord Server"]
 * Dependencies:
 ** {uri-litjson}[LitJSON]
 
+* Contributors:
+** https://github.com/Fusionette[Fusionette]
+
 == License
 Better Portal is developed and released under the MIT license. For the full text of the license, please see the {uri-license}[LICENSE] file.

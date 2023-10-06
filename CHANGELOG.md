@@ -1,3 +1,6 @@
+#### v1.0.5 [2023-10-07]
+- Fix tag name completion in Valheim 0.217.24 **([#3])**
+
 #### v1.0.4 [2023-07-02]
 - Updated for changes in Valheim 0.216.9
 
@@ -13,3 +16,6 @@
 
 #### v1.0.0 [2022-11-23]
 - Initial release
+
+<!-- Issue / PR links -->
+[#3]: https://github.com/eideehi/sd-webui-better-styles/pull/3
