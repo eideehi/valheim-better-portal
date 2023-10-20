@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using UnityEngine;
+using ModUtils;
 
 namespace BetterPortal
 {
@@ -84,6 +86,14 @@ namespace BetterPortal
                 .ToList();
             __result = list.Count == 0 ? null : list[Random.Range(0, list.Count)];
             return false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Localization), nameof(Localization.SetupLanguage))]
+        private static void Localization_SetupLanguage_Postfix(string language)
+        {
+            new TranslationsLoader(BetterPortal.L10N).LoadTranslations(
+                Path.Combine(BetterPortal.ModLocation, "Languages"), language);
         }
 
         [HarmonyPostfix]

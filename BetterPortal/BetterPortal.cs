@@ -31,9 +31,8 @@ namespace BetterPortal
         {
             ModLocation = Path.GetDirectoryName(info.Location) ?? "";
             Logger = new ModUtils.Logger(logger, level => false);
-
             L10N = new L10N("better_portal");
-            new TranslationsLoader(L10N).LoadJson(Path.Combine(ModLocation, "Languages"));
+            new TranslationsLoader(L10N).LoadTranslations(Path.Combine(ModLocation, "Languages"));
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), info.Metadata.GUID);
         }
