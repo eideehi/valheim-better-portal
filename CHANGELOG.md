@@ -1,3 +1,7 @@
+#### v1.0.6 [2023-10-20]
+- Add german translation **([#4])**
+- Fix translation not loading on language change
+
 #### v1.0.5 [2023-10-07]
 - Fix tag name completion in Valheim 0.217.24 **([#3])**
 
@@ -18,4 +22,5 @@
 - Initial release
 
 <!-- Issue / PR links -->
-[#3]: https://github.com/eideehi/sd-webui-better-styles/pull/3
+[#3]: https://github.com/eideehi/valheim-better-portal/pull/3
+[#4]: https://github.com/eideehi/valheim-better-portal/pull/4

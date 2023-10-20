@@ -1,7 +1,7 @@
 {
   "name": "Better_Portal",
   "description": "Better Portal is a mod that allows you to change the destination of portals to any tag. I know that there are already mods with the same functionality, but I created this mod because I did not want to install Jotunn.",
-  "version_number": "1.0.5",
+  "version_number": "1.0.6",
   "website_url": "https://github.com/eideehi/valheim-better-portal",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2200"
