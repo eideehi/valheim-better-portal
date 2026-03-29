@@ -22,9 +22,6 @@
     <ValheimDirectory Condition="Exists('$(STEAM_GAME_DIR)')">$(STEAM_GAME_DIR)\Valheim</ValheimDirectory>
     <BepInExDirectory Condition="Exists('$(ValheimDirectory)')">$(ValheimDirectory)\BepInEx</BepInExDirectory>
     <ManagedDataDirectory Condition="Exists('$(ValheimDirectory)')">$(ValheimDirectory)\valheim_Data\Managed</ManagedDataDirectory>
-    <!-- Consumed by the imported ILRepack package targets to locate the local ILRepack.targets file. -->
-    <ILRepackTargetsFile>$(MSBuildThisFileDirectory)ILRepack.targets</ILRepackTargetsFile>
-    <ILRepackTargetsPath>$(PkgILRepack_Lib_MSBuild_Task)\build\ILRepack.Lib.MSBuild.Task.targets</ILRepackTargetsPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(NormalizedPlatform)' == 'Debug|AnyCPU'">
@@ -51,7 +48,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Include="LitJson" Version="0.18.0" GeneratePathProperty="true" />
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" ExcludeAssets="build" GeneratePathProperty="true" />
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.44.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup Label="BepInEx">
@@ -236,12 +236,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <Import Project="$(ILRepackTargetsPath)" Condition="'$(Configuration)|$(NormalizedPlatform)' == 'Release|AnyCPU' And Exists('$(ILRepackTargetsPath)')" />
-
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(Configuration)|$(NormalizedPlatform)' == 'Release|AnyCPU'">
-    <Message Condition="!Exists('$(ILRepackTargetsPath)')" Text="ILRepack targets were not found. Release packaging will keep supporting assemblies external." Importance="Low" />
-  </Target>
 
   <Target Name="DeployModFiles" AfterTargets="Build" Condition="Exists('$(BepInExDirectory)') And '$(Configuration)|$(NormalizedPlatform)' == 'Debug|AnyCPU'">
     <ItemGroup>

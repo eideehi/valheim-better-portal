@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Target Name="ILRepacker" AfterTargets="Build">
+    <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
         <ItemGroup>
-            <InputAssemblies Include="$(TargetPath)"/>
-            <InputAssemblies Include="$(OutputPath)LitJSON.dll"/>
+            <InputAssemblies Include="$(TargetPath)" />
+            <InputAssemblies Include="$(TargetDir)LitJSON.dll" />
         </ItemGroup>
         <ILRepack
                 Parallel="true"
@@ -11,7 +11,8 @@
                 InputAssemblies="@(InputAssemblies)"
                 TargetKind="SameAsPrimaryAssembly"
                 OutputFile="$(TargetPath)"
-                LibraryPath="$(OutputPath)"
+                LibraryPath="$(TargetDir);$(ManagedDataDirectory)"
         />
+        <Delete Files="$(TargetDir)LitJSON.dll" />
     </Target>
 </Project>
