@@ -13,7 +13,7 @@ namespace BetterPortal
     {
         private const string ModId = "net.eidee.valheim.better_portal";
         private const string ModName = "Better Portal";
-        private const string ModVersion = "1.0.6";
+        private const string ModVersion = "1.0.7";
 
         private void Awake()
         {
@@ -30,9 +30,10 @@ namespace BetterPortal
         public static void Initialize(PluginInfo info, ManualLogSource logger, ConfigFile config)
         {
             ModLocation = Path.GetDirectoryName(info.Location) ?? "";
-            Logger = new ModUtils.Logger(logger, level => false);
+            Logger = new ModUtils.Logger(logger,
+                level => level != LogLevel.Debug && level != LogLevel.Message);
             L10N = new L10N("better_portal");
-            new TranslationsLoader(L10N).LoadTranslations(Path.Combine(ModLocation, "Languages"));
+            L10N.AddTranslationDirectory(Path.Combine(ModLocation, "Languages"));
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), info.Metadata.GUID);
         }
