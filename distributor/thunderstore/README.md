@@ -27,10 +27,6 @@ When interacting with the portal, you can set the destination tag by pressing th
 
 *Only bug reports are accepted under Issues.*
 
-[![eidee.net - Discord Server](https://app.box.com/shared/static/0s09ti60hvyyp5k98xyrnkfp683mrt9r.png)](https://discord.gg/DDQqxkK7s6)
-
-*Questions, suggestions and comments are welcome on the Discord Server.*
-
 ## Credits
 
 - Dependencies:
