@@ -1,9 +1,12 @@
-﻿{
+{
   "language": "german",
   "translations": {
-    "@shift_key": "Shift",
+    "@modifier_key": "Shift",
     "@empty_tag": "Keine Portalkennung",
-    "@piece_portal_setdesttag": "Ziel Portalkennung setzten",
-    "@piece_portal_dest": "Ziel"
+    "@piece_portal_setdesttag": "Ziel Portalkennung setzen",
+    "@piece_portal_dest": "Ziel",
+    "@config_general_section": "Allgemein",
+    "@config_general_ModifierKey_name": "Zusatztaste",
+    "@config_general_ModifierKey_description": "Die Taste, die beim Interagieren mit einem Portal gehalten werden muss, um die Ziel-Portalkennung zu setzen."
   }
 }

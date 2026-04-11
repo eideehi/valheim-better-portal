@@ -131,7 +131,7 @@ namespace BetterPortal
             __result = BetterPortal.L10N.Localize(
                 $"$piece_portal_tag:\"{tag}\"  @piece_portal_dest:\"{dest}\"  [{status}]\n" +
                 "[<color=yellow><b>$KEY_Use</b></color>] $piece_portal_settag\n" +
-                "[<color=yellow><b>@shift_key + $KEY_Use</b></color>] @piece_portal_setdesttag");
+                "[<color=yellow><b>@modifier_key + $KEY_Use</b></color>] @piece_portal_setdesttag");
             return false;
         }
 
@@ -153,7 +153,7 @@ namespace BetterPortal
                 return false;
             }
 
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            if (BetterPortal.IsModifierKeyPressed())
                 TextInput.instance.RequestText(__instance.GetComponent<TeleportWorldExtension>(),
                     BetterPortal.L10N.Translate("@piece_portal_dest"), 10);
             else

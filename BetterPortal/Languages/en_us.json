@@ -1,9 +1,12 @@
-﻿{
+{
   "language": "english",
   "translations": {
-    "@shift_key": "Shift",
+    "@modifier_key": "Shift",
     "@empty_tag": "Empty Tag",
     "@piece_portal_setdesttag": "Set destination tag",
-    "@piece_portal_dest": "Destination"
+    "@piece_portal_dest": "Destination",
+    "@config_general_section": "General",
+    "@config_general_ModifierKey_name": "Modifier Key",
+    "@config_general_ModifierKey_description": "The key to hold when interacting with a portal to set its destination tag."
   }
 }

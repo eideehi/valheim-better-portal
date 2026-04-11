@@ -1,9 +1,12 @@
-﻿{
+{
   "language": "japanese",
   "translations": {
-    "@shift_key": "Shift",
+    "@modifier_key": "Shift",
     "@empty_tag": "空のタグ",
     "@piece_portal_setdesttag": "行き先のタグを設定",
-    "@piece_portal_dest": "行き先"
+    "@piece_portal_dest": "行き先",
+    "@config_general_section": "一般",
+    "@config_general_ModifierKey_name": "修飾キー",
+    "@config_general_ModifierKey_description": "ポータルの行き先タグを設定する際に押し続けるキー。"
   }
 }
