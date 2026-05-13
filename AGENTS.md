@@ -5,6 +5,10 @@
 - Project: `BetterPortal/BetterPortal.csproj`
 - Target framework: `.NET Framework 4.8`
 
+## Repository notes
+- `BetterPortal/Libraries/mod-utils` is a read-only library dependency. Do not edit files under this directory unless the task is explicitly to update the submodule.
+- When preparing a release, create the Git tag that matches the release/package version so versioned README and Thunderstore links resolve correctly.
+
 ## Required local dependencies
 - A local Valheim installation
 - A local BepInEx installation inside the Valheim directory

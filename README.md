@@ -1,4 +1,5 @@
 # Better Portal - Valheim Mod
+
 Better Portal is a mod that allows you to change the destination of portals to any tag. I know that there are already mods with the same functionality, but I created this mod because I did not want to install Jotunn. If you already have Jotunn installed, there is no advantage to using this mod. This mod has only minimal functionality.
 
 > **IMPORTANT**
@@ -7,7 +8,7 @@ Better Portal is a mod that allows you to change the destination of portals to a
 
 ## Features
 
-For practical usage notes, see [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/main/docs/user-guide.md).
+For practical usage notes, see [docs/user-guide.md](docs/user-guide.md).
 
 When interacting with a portal, hold the configured modifier key to set the destination tag. Portals do not have to be connected to each other and can teleport one way.
 
@@ -15,13 +16,13 @@ When interacting with a portal, hold the configured modifier key to set the dest
 
 > **NOTE**: If multiple portals have the specified destination tag, the connection target is selected randomly.
 
-![Features - Image](https://raw.githubusercontent.com/eideehi/valheim-better-portal/main/docs/images/readme/features.jpg)
+![Features - Image](docs/images/readme/features.jpg)
 
 ## Configurations
 
 I recommend using [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager).
 
-Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/main/CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/main/docs/user-guide.md) for workflow notes.
+Use [CONFIG.md](CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](docs/user-guide.md) for workflow notes.
 
 ## Languages
 
@@ -45,4 +46,4 @@ Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/main/CONFI
 
 ## License
 
-Better Portal is developed and released under the MIT license. For the full text of the license, please see the [LICENSE](https://github.com/eideehi/valheim-better-portal/blob/main/LICENSE) file.
+Better Portal is developed and released under the MIT license. For the full text of the license, please see the [LICENSE](LICENSE) file.
