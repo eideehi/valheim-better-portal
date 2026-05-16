@@ -1,11 +1,18 @@
+# Build output
 bin/
 obj/
 /packages/
+
+# IDE and editor state
 riderModule.iml
 /_ReSharper.Caches/
 .idea/
 *.sln.DotSettings.user
+
+# Local agent workspace
 .agents/
 .claude/
-skills-lock.json
 .codex
+.plans/
+plans/
+skills-lock.json

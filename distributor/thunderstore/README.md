@@ -1,27 +1,27 @@
 # Better Portal - Valheim Mod
-Better Portal is a mod that allows you to change the destination of portals to any tag. I know that there are already mods with the same functionality, but I created this mod because I did not want to install Jotunn. If you already have Jotunn installed, there is no advantage to using this mod. This mod has only minimal functionality.
+Better Portal lets you change a Valheim portal's destination to any tag. It is a minimal alternative for players who do not want to install Jotunn. If Jotunn is already installed, this mod has no advantage over similar portal mods.
 
 > **IMPORTANT**
 >
-> This mod has been developed by an individual and is not associated with the game's developer in any way. Please refrain from asking the developer any questions regarding this mod.
+> This mod is developed by an individual and is not associated with the game's developer. Do not contact the game developer about this mod.
 
 ## Features
 
-For practical usage notes, see [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/main/docs/user-guide.md).
+For released documentation, see [README.adoc](https://github.com/eideehi/valheim-better-portal/blob/1.0.6/README.adoc).
 
-When interacting with a portal, hold the configured modifier key to set the destination tag. Portals do not have to be connected to each other and can teleport one way.
+When interacting with a portal, hold the configured modifier key to set the destination tag. Portals do not have to be connected to each other, and teleportation can be one-way.
 
 > **TIP**: Pressing the Insert key while entering the destination tag autocompletes from existing portal tags. Pressing the Up Arrow or Down Arrow key rotates existing tags.
 
 > **NOTE**: If multiple portals have the specified destination tag, the connection target is selected randomly.
 
-![Features - Image](https://raw.githubusercontent.com/eideehi/valheim-better-portal/main/docs/images/readme/features.jpg)
+![Features - Image](https://app.box.com/shared/static/8anhpoogiwa4tek8rznl2m1ag5mt6wso.jpg)
 
 ## Configurations
 
-I recommend using [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager).
+[Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager) is recommended.
 
-Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/main/CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/main/docs/user-guide.md) for workflow notes.
+Use the in-game configuration UI for available options.
 
 ## Languages
 
@@ -45,4 +45,4 @@ Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/main/CONFI
 
 ## License
 
-Better Portal is developed and released under the MIT license. For the full text of the license, please see the [LICENSE](https://github.com/eideehi/valheim-better-portal/blob/main/LICENSE) file.
+Better Portal is developed and released under the MIT license. See [LICENSE](https://github.com/eideehi/valheim-better-portal/blob/1.0.6/LICENSE) for the full license text.

@@ -10,8 +10,9 @@
 - When preparing a release, create the Git tag that matches the release/package version so versioned README and Thunderstore links resolve correctly.
 
 ## Required local dependencies
+- .NET SDK 8.0 or newer
 - A local Valheim installation
-- A local BepInEx installation inside the Valheim directory
+- BepInEx installed inside the Valheim directory
 
 The project resolves game references from the Valheim install directory. Set the following environment variable before building:
 
@@ -23,47 +24,68 @@ The expected directory shape is:
 - `<Valheim>/BepInEx/core`
 
 ## Build commands
-Use MSBuild-compatible tooling.
+Use `scripts/build.sh` for normal local builds. It validates `VALHEIM_DIR` and BepInEx core files, passes `FrameworkPathOverride`, and runs `dotnet msbuild`.
 
 Debug build:
 
 ```bash
-msbuild BetterPortal.sln /p:Configuration=Debug "/p:Platform=Any CPU"
+scripts/build.sh
 ```
 
 Release build:
 
 ```bash
-msbuild BetterPortal.sln /p:Configuration=Release "/p:Platform=Any CPU"
+scripts/build.sh Release
 ```
 
-If your environment prefers the .NET SDK entry point, `dotnet msbuild` can be used instead of `msbuild` as long as the machine can build .NET Framework 4.8 projects.
-
-When building under WSL or Linux, pass `FrameworkPathOverride` so MSBuild can use Valheim's managed framework assemblies:
+Clean before building:
 
 ```bash
-dotnet msbuild BetterPortal.sln /p:Configuration=Debug "/p:Platform=Any CPU" \
+scripts/build.sh Debug clean
+```
+
+Version consistency check:
+
+```bash
+scripts/check-version.sh
+```
+
+## Direct MSBuild fallback
+Use direct MSBuild commands only when debugging the build script or project file.
+
+Debug build:
+
+```bash
+dotnet msbuild BetterPortal.sln /restore /t:Build /p:Configuration=Debug "/p:Platform=Any CPU" \
+  /p:FrameworkPathOverride=$VALHEIM_DIR/valheim_Data/Managed
+```
+
+Release build:
+
+```bash
+dotnet msbuild BetterPortal.sln /restore /t:Build /p:Configuration=Release "/p:Platform=Any CPU" \
   /p:FrameworkPathOverride=$VALHEIM_DIR/valheim_Data/Managed
 ```
 
 ## Output
 - Debug output: `BetterPortal/bin/Debug/BetterPortal.dll`
-- Release output: `BetterPortal/bin/Release/BetterPortal.dll`
+- Release output without packaging: `BetterPortal/bin/Release/BetterPortal.dll`
+- Release output with `SEVENZIP_PATH`: package archives under `BetterPortal/bin/Release`
 - Installed mod path: `<Valheim>/BepInEx/plugins/BetterPortal`
 
 ## Debug build auto-deploy
-A native Windows Debug build auto-deploys the mod into `BepInEx/plugins/BetterPortal` if the game path is valid. WSL builds do not auto-deploy.
+Debug builds through `scripts/build.sh` or direct MSBuild trigger `DeployModFiles` when `VALHEIM_DIR` points to a valid BepInEx Valheim install.
 
 ## Release repack
-Release builds use `ILRepack.Lib.MSBuild.Task` to merge `LitJSON` into the output assembly.
+Release builds use `ILRepack.Lib.MSBuild.Task` to merge `LitJSON` into the output assembly. If the ILRepack build targets are missing, the Release build fails.
 
 ## Release packaging
-Optional: set `SEVENZIP_PATH` to a `7z` executable. If set, the Release build creates two archives after ILRepack:
+Set `SEVENZIP_PATH` to a `7z` executable to create release archives after ILRepack:
 
 - `BetterPortal - <Version>.7z` — Nexus package (mod files in a `BetterPortal/` subfolder)
-- `BetterPortal - <Version>.zip` — Thunderstore package (`plugins/`, `icon.png`, `manifest.json`, `README.md`)
+- `BetterPortal - <Version>.zip` — Thunderstore package (`plugins/`, `icon.png`, `manifest.json`, `README.md`, `CHANGELOG.md`)
 
-Thunderstore assets (`icon.png`, `manifest.json`, `README.md`) are sourced from `distributor/thunderstore/`. The Thunderstore `README.md` is a concatenation of `distributor/thunderstore/README.md` and `CHANGELOG.md`.
+Thunderstore assets (`icon.png`, `manifest.json`, `README.md`) are copied from `distributor/thunderstore/`. `CHANGELOG.md` is copied into the Thunderstore package as a separate root file.
 
 ## Manual install
 Copy the following into `<Valheim>/BepInEx/plugins/BetterPortal`:

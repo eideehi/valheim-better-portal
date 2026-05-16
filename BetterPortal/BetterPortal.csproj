@@ -19,9 +19,29 @@
   <PropertyGroup>
     <NormalizedPlatform Condition="'$(Platform)' == 'Any CPU'">AnyCPU</NormalizedPlatform>
     <NormalizedPlatform Condition="'$(NormalizedPlatform)' == ''">$(Platform)</NormalizedPlatform>
-    <ValheimDirectory Condition="Exists('$(VALHEIM_DIR)')">$(VALHEIM_DIR)</ValheimDirectory>
-    <BepInExDirectory Condition="Exists('$(ValheimDirectory)')">$(ValheimDirectory)\BepInEx</BepInExDirectory>
-    <ManagedDataDirectory Condition="Exists('$(ValheimDirectory)')">$(ValheimDirectory)\valheim_Data\Managed</ManagedDataDirectory>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="Exists('$(VALHEIM_DIR)\valheim_Data\Managed')">
+      <PropertyGroup>
+        <ValheimDirectory>$(VALHEIM_DIR)</ValheimDirectory>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(ValheimDirectory)' == '' And '$(OS)' == 'Windows_NT'">
+      <PropertyGroup>
+        <ValheimDirectory>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 892970', 'InstallLocation', null, RegistryView.Registry64, RegistryView.Registry32))</ValheimDirectory>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+  <PropertyGroup>
+    <BepInExDirectory Condition="Exists('$(ValheimDirectory)\BepInEx')">$(ValheimDirectory)\BepInEx</BepInExDirectory>
+    <ManagedDataDirectory Condition="Exists('$(ValheimDirectory)\valheim_Data\Managed')">$(ValheimDirectory)\valheim_Data\Managed</ManagedDataDirectory>
+    <UnityManagedDirectory Condition="Exists('$(ValheimDirectory)\unstripped_corlib')">$(ValheimDirectory)\unstripped_corlib</UnityManagedDirectory>
+    <UnityManagedDirectory Condition="'$(UnityManagedDirectory)' == '' And Exists('$(ManagedDataDirectory)')">$(ManagedDataDirectory)</UnityManagedDirectory>
+    <FrameworkPathOverride Condition="'$(OS)' != 'Windows_NT' And '$(ManagedDataDirectory)' != ''">$(ManagedDataDirectory)</FrameworkPathOverride>
+    <ILRepackTargetsFile>$(MSBuildProjectDirectory)/ILRepack.targets</ILRepackTargetsFile>
+    <ILRepackTargetsPath Condition="'$(PkgILRepack_Lib_MSBuild_Task)' != ''">$(PkgILRepack_Lib_MSBuild_Task)\build\ILRepack.Lib.MSBuild.Task.targets</ILRepackTargetsPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(NormalizedPlatform)' == 'Debug|AnyCPU'">
@@ -46,12 +66,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
-    <PackageReference Include="LitJson" Version="0.18.0" GeneratePathProperty="true" />
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.44.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" Condition="'$(OS)' == 'Windows_NT'" />
+    <PackageReference Include="LitJson" Version="0.18.0" GeneratePathProperty="true" ExcludeAssets="compile" />
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.44.1" ExcludeAssets="build" GeneratePathProperty="true" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Label="BepInEx">
@@ -72,107 +89,107 @@
     </Reference>
     <Reference Include="UnityEngine">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AccessibilityModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.AccessibilityModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.AccessibilityModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.AIModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.AIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ClothModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.ClothModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.ClothModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.InputLegacyModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ScreenCaptureModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.ScreenCaptureModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.UIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.UIElementsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.InputModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.InputModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.JSONSerializeModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.JSONSerializeModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.JSONSerializeModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TerrainModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.TerrainModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.TerrainModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextCoreTextEngineModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestAudioModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.UnityWebRequestModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestTextureModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>$(UnityManagedDirectory)\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -234,6 +251,18 @@
     </Content>
   </ItemGroup>
 
+  <Import Project="$(ILRepackTargetsPath)" Condition="'$(Configuration)|$(NormalizedPlatform)' == 'Release|AnyCPU' And Exists('$(ILRepackTargetsPath)')" />
+
+  <Target Name="EnsureValheimReferencesAreKnown" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(ManagedDataDirectory)' == '' Or !Exists('$(ManagedDataDirectory)\assembly_valheim.dll')" Text="VALHEIM_DIR must point at a Valheim install containing valheim_Data\Managed\assembly_valheim.dll." />
+    <Error Condition="'$(UnityManagedDirectory)' == '' Or !Exists('$(UnityManagedDirectory)\UnityEngine.CoreModule.dll')" Text="VALHEIM_DIR must point at a Valheim install containing Unity managed assemblies." />
+    <Error Condition="'$(BepInExDirectory)' == '' Or !Exists('$(BepInExDirectory)\core\0Harmony.dll') Or !Exists('$(BepInExDirectory)\core\BepInEx.dll')" Text="VALHEIM_DIR must point at a Valheim install containing BepInEx\core\0Harmony.dll and BepInEx\core\BepInEx.dll." />
+  </Target>
+
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(Configuration)|$(NormalizedPlatform)' == 'Release|AnyCPU'">
+    <Error Condition="'$(ILRepackTargetsPath)' == '' Or !Exists('$(ILRepackTargetsPath)')" Text="ILRepack targets were not found. Run dotnet restore before Release builds." />
+  </Target>
+
   <Target Name="DeployModFiles" AfterTargets="Build" Condition="Exists('$(BepInExDirectory)') And '$(Configuration)|$(NormalizedPlatform)' == 'Debug|AnyCPU'">
     <ItemGroup>
       <ModFiles Include="$(TargetPath)" />
@@ -253,8 +282,7 @@
     <ItemGroup>
       <ModFiles Include="$(TargetPath)" />
       <ModFiles Include="$(TargetDir)**\*.json" />
-      <ThunderstoreFiles Include="$(ThunderstoreAssetsDir)icon.png;$(ThunderstoreAssetsDir)manifest.json" />
-      <ThunderstoreReadmeText Include="$(ThunderstoreAssetsDir)README.md;$(SolutionDir)CHANGELOG.md" />
+      <ThunderstoreFiles Include="$(ThunderstoreAssetsDir)README.md;$(SolutionDir)CHANGELOG.md;$(ThunderstoreAssetsDir)icon.png;$(ThunderstoreAssetsDir)manifest.json" />
     </ItemGroup>
     <Move SourceFiles="@(ModFiles)" DestinationFiles="@(ModFiles->'$(NexusPackageDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
     <RemoveDir Directories="$(TargetDir)" />
@@ -262,11 +290,9 @@
     <Exec Command="&quot;$(SEVENZIP_PATH)&quot; a &quot;$(TargetDir)$(TargetName) - $(Version).7z&quot; &quot;$(PackageTempDir)/*&quot;" />
     <ItemGroup>
       <NexusPackageFiles Include="$(NexusPackageDir)**\*" />
-      <ReadmeText Include="$([System.IO.File]::ReadAllText(%(ThunderstoreReadmeText.Identity)))" />
     </ItemGroup>
     <Move SourceFiles="@(NexusPackageFiles)" DestinationFiles="@(NexusPackageFiles->'$(ThunderstorePackageDir)%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(ThunderstoreFiles)" DestinationFiles="@(ThunderstoreFiles->'$(PackageTempDir)%(RecursiveDir)%(Filename)%(Extension)')" />
-    <WriteLinesToFile File="$(PackageTempDir)README.md" Lines="@(ReadmeText)" Overwrite="true" />
     <Exec Command="&quot;$(SEVENZIP_PATH)&quot; a &quot;$(TargetDir)$(TargetName) - $(Version).zip&quot; &quot;$(PackageTempDir)/*&quot; -xr!$(TargetName)/" />
     <RemoveDir Directories="$(PackageTempDir)" />
   </Target>
