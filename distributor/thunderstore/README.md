@@ -7,7 +7,7 @@ Better Portal lets you change a Valheim portal's destination to any tag. It is a
 
 ## Features
 
-For released documentation, see [README.adoc](https://github.com/eideehi/valheim-better-portal/blob/1.0.6/README.adoc).
+For released documentation, see [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.7/docs/user-guide.md).
 
 When interacting with a portal, hold the configured modifier key to set the destination tag. Portals do not have to be connected to each other, and teleportation can be one-way.
 
@@ -15,13 +15,13 @@ When interacting with a portal, hold the configured modifier key to set the dest
 
 > **NOTE**: If multiple portals have the specified destination tag, the connection target is selected randomly.
 
-![Features - Image](https://app.box.com/shared/static/8anhpoogiwa4tek8rznl2m1ag5mt6wso.jpg)
+![Features - Image](https://raw.githubusercontent.com/eideehi/valheim-better-portal/1.0.7/docs/images/readme/features.jpg)
 
 ## Configurations
 
 [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager) is recommended.
 
-Use the in-game configuration UI for available options.
+Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.7/CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.7/docs/user-guide.md) for workflow notes.
 
 ## Languages
 
@@ -45,4 +45,4 @@ Use the in-game configuration UI for available options.
 
 ## License
 
-Better Portal is developed and released under the MIT license. See [LICENSE](https://github.com/eideehi/valheim-better-portal/blob/1.0.6/LICENSE) for the full license text.
+Better Portal is developed and released under the MIT license. See [LICENSE](https://github.com/eideehi/valheim-better-portal/blob/1.0.7/LICENSE) for the full license text.

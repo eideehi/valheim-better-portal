@@ -1,3 +1,9 @@
+#### v1.0.7 [2026-05-17]
+- Updated for changes in Valheim 0.221.12
+- Added a configurable modifier key for destination tag editing
+- Fixed German localization file naming
+- Updated build and release packaging metadata
+
 #### v1.0.6 [2023-10-20]
 - Add german translation **([#4])**
 - Fix translation not loading on language change
