@@ -49,6 +49,8 @@ namespace BetterPortal
                 if (target == null || target.GetString(ZDOVars.s_tag) != dest)
                 {
                     zdo.SetOwner(ZDOMan.GetSessionID());
+                    // Clearing goes through UpdateConnection, like vanilla does: the !IsNone() guard
+                    // above already proves a connection entry exists for this ZDO.
                     zdo.UpdateConnection(ZDOExtraData.ConnectionType.Portal, ZDOID.None);
                     ZDOMan.instance.ForceSendZDO(zdo.m_uid);
                 }
@@ -60,7 +62,7 @@ namespace BetterPortal
                 yield return null;
             }
 
-            var portals = ZDOMan.instance.GetPortals()
+            var portals = ZDOMan.instance.GetPortalList()
                 .Where(x => x != zdo && x.GetString(ZDOVars.s_tag) == dest)
                 .ToList();
             var portal = portals.Count == 0
@@ -69,7 +71,12 @@ namespace BetterPortal
             if (portal != null)
             {
                 zdo.SetOwner(ZDOMan.GetSessionID());
-                zdo.UpdateConnection(ZDOExtraData.ConnectionType.Portal, portal.m_uid);
+                // Establishing a connection must go through SetConnection, not UpdateConnection:
+                // UpdateConnection only rewrites an entry that already exists and does nothing at all
+                // for a portal that has never been connected, so ForceSendZDO below would ship an
+                // unchanged ZDO and the destination tag would not take effect until the server's next
+                // Game.ConnectPortals pass.
+                zdo.SetConnection(ZDOExtraData.ConnectionType.Portal, portal.m_uid);
                 ZDOMan.instance.ForceSendZDO(zdo.m_uid);
             }
 

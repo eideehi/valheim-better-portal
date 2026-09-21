@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Reflection;
 using BepInEx;
@@ -54,13 +55,35 @@ namespace BetterPortal
         {
             var key = ModifierKey.Value;
             var paired = GetPairedKey(key);
-            return Input.GetKey(key) || (paired != KeyCode.None && Input.GetKey(paired));
+            try
+            {
+                return ZInput.GetKey(key, false) ||
+                       (paired != KeyCode.None && ZInput.GetKey(paired, false));
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // ZInput accepts more KeyCode values than it can map onto the input system, and reading
+                // an unmapped one throws instead of reporting "not pressed". Falling back to the default
+                // keeps portals usable rather than letting every interaction fail.
+                RejectUnusableModifierKey(key);
+                return false;
+            }
         }
 
         private static void ValidateModifierKey()
         {
-            if (ModifierKey.Value == KeyCode.None)
+            if (ModifierKey.Value == KeyCode.None || !ZInput.IsKeyCodeValid(ModifierKey.Value))
                 ModifierKey.Value = (KeyCode)ModifierKey.DefaultValue;
+        }
+
+        private static void RejectUnusableModifierKey(KeyCode key)
+        {
+            var fallback = (KeyCode)ModifierKey.DefaultValue;
+            if (ModifierKey.Value != key) return;
+
+            Logger.Error($"ModifierKey {key} cannot be read on this version of Valheim. " +
+                         $"Falling back to {fallback}.");
+            ModifierKey.Value = fallback;
         }
 
         private static void UpdateModifierKeyDisplay(KeyCode keyCode)

@@ -15,7 +15,7 @@ namespace BetterPortal
 
         private static List<string> GetPortalTags()
         {
-            return ZDOMan.instance.GetPortals()
+            return ZDOMan.instance.GetPortalList()
                 .Select(x => x.GetString(ZDOVars.s_tag))
                 .OrderBy(x => x)
                 .Distinct()
@@ -38,11 +38,11 @@ namespace BetterPortal
         {
             if (!_keyPressed)
             {
-                if (Input.GetKeyDown(KeyCode.Insert))
+                if (ZInput.GetKeyDown(KeyCode.Insert, false))
                     _pressedKey = KeyCode.Insert;
-                else if (Input.GetKeyDown(KeyCode.UpArrow))
+                else if (ZInput.GetKeyDown(KeyCode.UpArrow, false))
                     _pressedKey = KeyCode.UpArrow;
-                else if (Input.GetKeyDown(KeyCode.DownArrow))
+                else if (ZInput.GetKeyDown(KeyCode.DownArrow, false))
                     _pressedKey = KeyCode.DownArrow;
                 else
                     _pressedKey = KeyCode.None;
@@ -51,7 +51,11 @@ namespace BetterPortal
             }
             else
             {
-                if (!Input.GetKeyUp(_pressedKey))
+                // The release is detected as a level ("the key is no longer held") rather than as the
+                // GetKeyUp edge: this runs from a postfix that is only reached while the text input is
+                // visible and focused, so the edge can be missed entirely - which used to latch _keyHold
+                // and leave the keys dead until that same key was pressed and released again.
+                if (ZInput.GetKey(_pressedKey, false))
                 {
                     _keyHold = true;
                     return;

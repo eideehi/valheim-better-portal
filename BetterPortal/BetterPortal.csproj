@@ -115,10 +115,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(UnityManagedDirectory)\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(UnityManagedDirectory)\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(UnityManagedDirectory)\UnityEngine.ParticleSystemModule.dll</HintPath>
@@ -210,10 +206,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(ManagedDataDirectory)\assembly_postprocessing.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_steamworks">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\assembly_steamworks.dll</HintPath>
-    </Reference>
     <Reference Include="assembly_sunshafts">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(ManagedDataDirectory)\assembly_sunshafts.dll</HintPath>
@@ -226,9 +218,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(ManagedDataDirectory)\gui_framework.dll</HintPath>
     </Reference>
-    <Reference Include="ui_lib">
+    <Reference Include="Splatform">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataDirectory)\ui_lib.dll</HintPath>
+      <HintPath>$(ManagedDataDirectory)\Splatform.dll</HintPath>
     </Reference>
   </ItemGroup>
 
