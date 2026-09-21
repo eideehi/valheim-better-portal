@@ -50,6 +50,15 @@ Version consistency check:
 scripts/check-version.sh
 ```
 
+## Transpiler IL check
+`tools/il-verify` is a standalone .NET 8 console tool that reads the installed `assembly_valheim.dll` with Mono.Cecil and asserts that the IL shapes the `Game.ConnectPortals` Harmony transpiler pattern-matches against are still present.
+
+```bash
+VALHEIM_DIR=<Valheim> dotnet run --project tools/il-verify -c Release
+```
+
+Run it after a Valheim update and before a release. A non-zero exit code means the game's IL moved and the transpiler in `BetterPortal/Patches.cs` needs to be revisited. See `tools/il-verify/README.md` for what it does and does not verify.
+
 ## Direct MSBuild fallback
 Use direct MSBuild commands only when debugging the build script or project file.
 
