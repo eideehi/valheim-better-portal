@@ -8,6 +8,7 @@
 ## Repository notes
 - `BetterPortal/Libraries/mod-utils` is a read-only library dependency. Do not edit files under this directory unless the task is explicitly to update the submodule.
 - When preparing a release, create the Git tag that matches the release/package version so versioned README and Thunderstore links resolve correctly.
+- Every release commit must update `distributor/thunderstore/manifest.json`: set `version_number` to the release version, and set the `denikson-BepInExPack_Valheim-<version>` dependency to the BepInExPack Valheim version the release was verified with. Never carry the previous release's dependency version forward unchecked. Read the current version from the `User is running BepInExPack Valheim version <version>` line in `<Valheim>/BepInEx/LogOutput.log`. `scripts/check-version.sh` does not check this dependency.
 
 ## Required local dependencies
 - .NET SDK 8.0 or newer
