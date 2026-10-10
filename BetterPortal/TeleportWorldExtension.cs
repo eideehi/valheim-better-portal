@@ -89,6 +89,11 @@ namespace BetterPortal
             return _zNetView.GetZDO().GetString(ZdoTags.DestTag);
         }
 
+        public string GetPortalTag()
+        {
+            return _zNetView.GetZDO().GetString(ZDOVars.s_tag);
+        }
+
         public void SetText(string text)
         {
             if (_zNetView.IsValid())

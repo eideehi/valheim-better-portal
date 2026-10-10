@@ -40,6 +40,15 @@ The destination tag editor has shortcuts for existing portal tags:
 
 The helper list is built from portal tags that already exist in the current world.
 
+While the destination tag field has focus, a list of the existing portal tags in the world appears below the dialog:
+
+- Click a tag in the list to put it into the field. The dialog stays open, so confirm with Enter as usual.
+- The tag that matches the field text is highlighted. As you type, the list scrolls to the tag that matches or starts with the typed text. `Insert`, `UpArrow`, and `DownArrow` keep working, and the list follows them.
+- Up to six tags are visible at once. If there are more, a scrollbar appears; scroll with the mouse wheel, the scrollbar, or by dragging the list.
+- Empty tags are not listed. The list is refreshed each time the field gets focus.
+- The tag of the portal you are editing is not listed.
+- The list is shown only in the destination tag editor (not in the portal tag editor), and not while a gamepad is the active input.
+
 ## Configurations
 
 I recommend using [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager) to edit Better Portal options in game.

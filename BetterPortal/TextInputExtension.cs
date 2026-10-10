@@ -13,7 +13,7 @@ namespace BetterPortal
         private static string _originalWord;
         private static string _previousResult;
 
-        private static List<string> GetPortalTags()
+        internal static List<string> GetPortalTags()
         {
             return ZDOMan.instance.GetPortalList()
                 .Select(x => x.GetString(ZDOVars.s_tag))
@@ -22,7 +22,7 @@ namespace BetterPortal
                 .ToList();
         }
 
-        private static void UpdateTextInput(TextInput input, string text)
+        internal static void SetText(TextInput input, string text)
         {
             if (input.m_inputField)
             {
@@ -30,7 +30,9 @@ namespace BetterPortal
                 if (text == textField.text) return;
 
                 textField.text = string.IsNullOrEmpty(text) ? "" : text;
-                textField.MoveTextEnd(false);
+                // MoveTextEnd leaves the drawn caret behind when rich-text editing is allowed;
+                // stringPosition moves both.
+                textField.stringPosition = textField.text.Length;
             }
         }
 
@@ -75,9 +77,9 @@ namespace BetterPortal
 
             var text = (input.m_inputField ? input.m_inputField.text : "");
             if (_pressedKey == KeyCode.Insert)
-                UpdateTextInput(input, AutoComplete(text));
+                SetText(input, AutoComplete(text));
             else if (_pressedKey == KeyCode.UpArrow || _pressedKey == KeyCode.DownArrow)
-                UpdateTextInput(input, Rotate(text, _pressedKey == KeyCode.DownArrow));
+                SetText(input, Rotate(text, _pressedKey == KeyCode.DownArrow));
         }
 
         private static string AutoComplete(string word)

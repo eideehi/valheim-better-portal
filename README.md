@@ -12,7 +12,7 @@ For practical usage notes, see [docs/user-guide.md](docs/user-guide.md).
 
 When interacting with a portal, hold the configured modifier key to set the destination tag. Portals do not have to be connected to each other and can teleport one way.
 
-> **TIP**: Pressing the Insert key while entering the destination tag autocompletes from existing portal tags. Pressing the Up Arrow or Down Arrow key rotates existing tags.
+> **TIP**: Pressing the Insert key while entering the destination tag autocompletes from existing portal tags. Pressing the Up Arrow or Down Arrow key rotates existing tags. While the destination tag field has focus, a clickable list of existing portal tags also appears below the dialog.
 
 > **NOTE**: If multiple portals have the specified destination tag, the connection target is selected randomly.
 

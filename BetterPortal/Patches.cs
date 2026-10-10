@@ -213,12 +213,33 @@ namespace BetterPortal
         private static void TextInput_Update_Postfix(TextInput __instance,
             TextReceiver ___m_queuedSign, bool ___m_visibleFrame)
         {
-            if (!___m_visibleFrame || Console.IsVisible() || Chat.instance.HasFocus()) return;
-            if ((!__instance.m_inputField || !__instance.m_inputField.isFocused)) return;
-            if (!TeleportWorldExtension.GetAllInstance()
-                    .Any(x => ReferenceEquals(x, ___m_queuedSign))) return;
+            var active = ___m_visibleFrame && !Console.IsVisible() && !Chat.instance.HasFocus() &&
+                         __instance.m_inputField && __instance.m_inputField.isFocused &&
+                         TeleportWorldExtension.GetAllInstance()
+                             .Any(x => ReferenceEquals(x, ___m_queuedSign));
+            if (!active)
+            {
+                PortalTagList.Hide();
+                return;
+            }
 
+            // Update may rewrite the field text (Insert/Up/Down), and the list reads it afterwards.
             TextInputExtension.Update(__instance);
+            PortalTagList.Update(__instance, (TeleportWorldExtension)___m_queuedSign);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ZInput), "Internal_GetMouseScrollWheel")]
+        private static void ZInput_Internal_GetMouseScrollWheel_Postfix(ref float __result)
+        {
+            // GameCamera zooms on ZInput.GetMouseScrollWheel() without checking for an open text input,
+            // so the wheel that scrolls the tag list would zoom the camera as well. The list itself is
+            // scrolled by the UI input module and does not read ZInput. The public method is only a
+            // tiny wrapper that the JIT may inline into its callers, out of reach of a patch, so the
+            // private method behind it is patched instead; a postfix keeps the original's input-source
+            // bookkeeping.
+            if (PortalTagList.IsShown)
+                __result = 0f;
         }
 
         /// <summary>
