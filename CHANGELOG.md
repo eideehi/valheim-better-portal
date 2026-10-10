@@ -1,3 +1,8 @@
+#### v1.0.8 [2026-10-10]
+- Updated for changes in Valheim 1.0.15
+- Fixed clearing a portal connection when the destination tag changes
+- Filtered censored destination tags in the portal hover text
+
 #### v1.0.7 [2026-05-17]
 - Updated for changes in Valheim 0.221.12
 - Added a configurable modifier key for destination tag editing
