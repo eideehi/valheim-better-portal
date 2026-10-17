@@ -20,6 +20,7 @@ namespace BetterPortal
         private void Awake()
         {
             BetterPortal.Initialize(Info, Logger, Config);
+            ConfigurationGui.Register(this);
         }
     }
 
