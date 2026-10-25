@@ -20,7 +20,13 @@ When interacting with a portal, hold the configured modifier key to set the dest
 
 ## Configurations
 
-I recommend using [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager).
+Open the game's Settings screen from the main menu or the pause menu, select the **Mods** tab, and then select **Better Portal**. Changes are saved when you press **Apply**.
+
+![Settings screen](docs/images/readme/settings-screen.jpg)
+
+Better Portal also works with [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager).
+
+To remove Better Portal from the **Mods** tab, turn off `Show on the Settings screen` (`[mod_utils]` section) in Configuration Manager or in the config file; it is not shown on the Settings screen itself.
 
 Use [CONFIG.md](CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](docs/user-guide.md) for workflow notes.
 
