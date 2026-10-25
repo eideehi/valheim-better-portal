@@ -21,6 +21,7 @@ namespace BetterPortal
 
         private static TextInput _owner;
         private static TextInput _failedOwner;
+        private static TeleportWorldExtension _listedReceiver;
         private static RectTransform _root;
         private static RectTransform _viewport;
         private static RectTransform _content;
@@ -43,7 +44,12 @@ namespace BetterPortal
                 return;
             }
 
-            if (!_shown) Show(input, receiver);
+            if (!ReferenceEquals(_listedReceiver, receiver))
+            {
+                Hide();
+                Show(input, receiver);
+                _listedReceiver = receiver;
+            }
             if (!_shown) return;
 
             var text = input.m_inputField.text;
@@ -56,6 +62,7 @@ namespace BetterPortal
 
         public static void Hide()
         {
+            _listedReceiver = null;
             if (!_shown) return;
 
             if (_root && _root.gameObject.activeSelf)
@@ -102,6 +109,7 @@ namespace BetterPortal
         {
             Rows.Clear();
             _shown = false;
+            _listedReceiver = null;
             _lastText = null;
 
             var field = input.m_inputField;
