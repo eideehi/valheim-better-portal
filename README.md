@@ -26,7 +26,7 @@ Open the game's Settings screen from the main menu or the pause menu, select the
 
 Better Portal also works with [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager).
 
-To remove Better Portal from the **Mods** tab, turn off `Show on the Settings screen` (`[mod_utils]` section) in Configuration Manager or in the config file; it is not shown on the Settings screen itself.
+To remove Better Portal from the **Mods** tab, turn off `Show on the Settings screen` in Configuration Manager’s `Settings screen` category, or set `show_on_settings_screen=false` in the config file’s `[mod_utils]` section. The change takes effect the next time the Settings screen opens; this option is not shown in the Better Portal Settings panel.
 
 Use [CONFIG.md](CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](docs/user-guide.md) for workflow notes.
 

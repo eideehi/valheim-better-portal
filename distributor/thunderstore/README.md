@@ -11,15 +11,21 @@ For released documentation, see [docs/user-guide.md](https://github.com/eideehi/
 
 When interacting with a portal, hold the configured modifier key to set the destination tag. Portals do not have to be connected to each other, and teleportation can be one-way.
 
-> **TIP**: Pressing the Insert key while entering the destination tag autocompletes from existing portal tags. Pressing the Up Arrow or Down Arrow key rotates existing tags.
+> **TIP**: Pressing the Insert key while entering the destination tag autocompletes from existing portal tags. Pressing the Up Arrow or Down Arrow key rotates existing tags. While the destination tag field has focus, a clickable list of existing portal tags also appears below the dialog.
 
 > **NOTE**: If multiple portals have the specified destination tag, the connection target is selected randomly.
 
-![Features - Image](https://raw.githubusercontent.com/eideehi/valheim-better-portal/1.0.8/docs/images/readme/features.jpg)
+![Features - Image](https://raw.githubusercontent.com/eideehi/valheim-better-portal/97754f624e13a859b5e8ffaf4720f9af507bd2a8/docs/images/readme/features.jpg)
 
 ## Configurations
 
-[Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager) is recommended.
+Open the game's Settings screen from the main menu or the pause menu, select the **Mods** tab, and then select **Better Portal**. Changes are saved when you press **Apply**.
+
+![Settings screen](https://raw.githubusercontent.com/eideehi/valheim-better-portal/97754f624e13a859b5e8ffaf4720f9af507bd2a8/docs/images/readme/settings-screen.jpg)
+
+Better Portal also works with [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager).
+
+To remove Better Portal from the **Mods** tab, turn off `Show on the Settings screen` in Configuration Manager’s `Settings screen` category, or set `show_on_settings_screen=false` in the config file’s `[mod_utils]` section. The change takes effect the next time the Settings screen opens; this option is not shown in the Better Portal Settings panel.
 
 Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.8/CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.8/docs/user-guide.md) for workflow notes.
 
