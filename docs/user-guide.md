@@ -51,13 +51,14 @@ While the destination tag field has focus, a list of the existing portal tags in
 
 ## Configurations
 
-I recommend using [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager) to edit Better Portal options in game.
+Open the game's Settings screen from the main menu or the pause menu, select the **Mods** tab, and then select **Better Portal**. Changes are saved when you press **Apply**. Better Portal also works with [Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager).
 
-Key setting:
+Key settings:
 
 | Setting | Effect |
 | --- | --- |
 | `Modifier Key` | Sets the key held while using a portal to edit its destination tag. |
+| `Show on the Settings screen` | Lists Better Portal on the Settings screen's **Mods** tab (on by default). It is not shown in the Better Portal panel; change it in Configuration Manager's `Settings screen` category or with `show_on_settings_screen` in the config file's `[mod_utils]` section. A change takes effect the next time the Settings screen opens. |
 
 The default modifier key is `LeftShift`. `None` is not allowed and is reset to the default value.
 
