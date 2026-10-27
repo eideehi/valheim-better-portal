@@ -15,7 +15,7 @@ namespace BetterPortal
     {
         private const string ModId = "net.eidee.valheim.better_portal";
         private const string ModName = "Better Portal";
-        private const string ModVersion = "1.0.8";
+        private const string ModVersion = "1.1.0";
 
         private void Awake()
         {

@@ -11,7 +11,7 @@
     <AssemblyName>BetterPortal</AssemblyName>
     <TargetFramework>net48</TargetFramework>
     <FileAlignment>512</FileAlignment>
-    <Version>1.0.8</Version>
+    <Version>1.1.0</Version>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>

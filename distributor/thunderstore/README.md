@@ -7,7 +7,7 @@ Better Portal lets you change a Valheim portal's destination to any tag. It is a
 
 ## Features
 
-For released documentation, see [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.8/docs/user-guide.md).
+For released documentation, see [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/1.1.0/docs/user-guide.md).
 
 When interacting with a portal, hold the configured modifier key to set the destination tag. Portals do not have to be connected to each other, and teleportation can be one-way.
 
@@ -27,7 +27,7 @@ Better Portal also works with [Configuration Manager](https://github.com/BepInEx
 
 To remove Better Portal from the **Mods** tab, turn off `Show on the Settings screen` in Configuration Manager’s `Settings screen` category, or set `show_on_settings_screen=false` in the config file’s `[mod_utils]` section. The change takes effect the next time the Settings screen opens; this option is not shown in the Better Portal Settings panel.
 
-Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.8/CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.8/docs/user-guide.md) for workflow notes.
+Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/1.1.0/CONFIG.md) for every configuration entry and default value. Use [docs/user-guide.md](https://github.com/eideehi/valheim-better-portal/blob/1.1.0/docs/user-guide.md) for workflow notes.
 
 ## Languages
 
@@ -51,4 +51,4 @@ Use [CONFIG.md](https://github.com/eideehi/valheim-better-portal/blob/1.0.8/CONF
 
 ## License
 
-Better Portal is developed and released under the MIT license. See [LICENSE](https://github.com/eideehi/valheim-better-portal/blob/1.0.8/LICENSE) for the full license text.
+Better Portal is developed and released under the MIT license. See [LICENSE](https://github.com/eideehi/valheim-better-portal/blob/1.1.0/LICENSE) for the full license text.

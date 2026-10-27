@@ -1,3 +1,7 @@
+#### v1.1.0 [2026-10-27]
+- While editing a destination tag, a clickable list of existing tags appears with scrolling and a highlight for the matching tag. The list is a snapshot taken on focus, even when empty; refocus the field to refresh it.
+- Configure Better Portal in the game’s Settings screen under Mods; select Better Portal and press Apply to save changes. To hide Better Portal from Mods, turn off `Show on the Settings screen` in Configuration Manager or set `show_on_settings_screen=false` in the config file; the option is not shown in the Better Portal Settings panel and takes effect the next time Settings opens.
+
 #### v1.0.8 [2026-10-10]
 - Updated for changes in Valheim 1.0.15
 - Fixed clearing a portal connection when the destination tag changes
